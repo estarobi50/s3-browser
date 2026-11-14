@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#232f3e"/></marker>
+    <marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d86613"/></marker>
+  </defs>
+  <rect width="1200" height="600" fill="#ffffff"/>
+  <text x="600" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#232f3e">S3 Browser Portal – Authentication and Access Flow</text>
+
+  <!-- Browser -->
+  <rect x="40" y="230" width="230" height="130" rx="10" fill="#f2f3f3" stroke="#232f3e" stroke-width="2"/>
+  <text x="155" y="262" text-anchor="middle" font-size="16" font-weight="700" fill="#232f3e">Your Browser</text>
+  <text x="155" y="286" text-anchor="middle" font-size="13" fill="#232f3e">React + Amplify UI</text>
+  <text x="155" y="304" text-anchor="middle" font-size="13" fill="#232f3e">Storage Browser</text>
+  <text x="155" y="328" text-anchor="middle" font-size="12" fill="#545b64">localhost:5173 (Vite)</text>
+
+  <!-- User Pool -->
+  <rect x="420" y="60" width="250" height="100" rx="10" fill="#fff" stroke="#dd344c" stroke-width="2.5"/>
+  <rect x="420" y="60" width="250" height="30" rx="10" fill="#dd344c"/><rect x="420" y="80" width="250" height="10" fill="#dd344c"/>
+  <text x="545" y="81" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Amazon Cognito User Pool</text>
+  <text x="545" y="114" text-anchor="middle" font-size="13" fill="#232f3e">Email + password sign-in (SRP)</text>
+  <text x="545" y="134" text-anchor="middle" font-size="13" fill="#232f3e">Admin-created user, no self sign-up</text>
+
+  <!-- Identity Pool -->
+  <rect x="420" y="240" width="250" height="100" rx="10" fill="#fff" stroke="#dd344c" stroke-width="2.5"/>
+  <rect x="420" y="240" width="250" height="30" rx="10" fill="#dd344c"/><rect x="420" y="260" width="250" height="10" fill="#dd344c"/>
+  <text x="545" y="261" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Cognito Identity Pool</text>
+  <text x="545" y="294" text-anchor="middle" font-size="13" fill="#232f3e">Trusts the User Pool token</text>
+  <text x="545" y="314" text-anchor="middle" font-size="13" fill="#232f3e">Authenticated identities only</text>
+
+  <!-- IAM -->
+  <rect x="420" y="420" width="250" height="120" rx="10" fill="#fff" stroke="#dd344c" stroke-width="2.5"/>
+  <rect x="420" y="420" width="250" height="30" rx="10" fill="#dd344c"/><rect x="420" y="440" width="250" height="10" fill="#dd344c"/>
+  <text x="545" y="441" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">IAM Role + AWS STS</text>
+  <text x="545" y="472" text-anchor="middle" font-size="13" fill="#232f3e">Authenticated role, inline policy:</text>
+  <text x="545" y="492" text-anchor="middle" font-size="12" fill="#232f3e">s3:ListBucket</text>
+  <text x="545" y="510" text-anchor="middle" font-size="12" fill="#232f3e">s3:GetObject / PutObject / DeleteObject</text>
+  <text x="545" y="528" text-anchor="middle" font-size="12" fill="#545b64">scoped to one bucket</text>
+
+  <!-- S3 -->
+  <rect x="900" y="230" width="260" height="130" rx="10" fill="#fff" stroke="#3f8624" stroke-width="2.5"/>
+  <rect x="900" y="230" width="260" height="30" rx="10" fill="#3f8624"/><rect x="900" y="250" width="260" height="10" fill="#3f8624"/>
+  <text x="1030" y="251" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Amazon S3</text>
+  <text x="1030" y="288" text-anchor="middle" font-size="14" font-weight="700" fill="#232f3e">digitalcultureit.com</text>
+  <text x="1030" y="310" text-anchor="middle" font-size="12" fill="#232f3e">Bucket CORS allows the portal origin</text>
+  <text x="1030" y="330" text-anchor="middle" font-size="12" fill="#545b64">(ETag and related headers exposed)</text>
+
+  <!-- 1 sign in -->
+  <path d="M270,250 L420,110" stroke="#232f3e" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <circle cx="318" cy="205" r="13" fill="#232f3e"/><text x="318" y="210" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text>
+  <text x="170" y="168" font-size="13" fill="#232f3e">Sign in with</text><text x="170" y="185" font-size="13" fill="#232f3e">email + password</text>
+  <!-- 2 token -->
+  <path d="M420,135 L270,275" stroke="#232f3e" stroke-width="2" stroke-dasharray="6 4" fill="none" marker-end="url(#a)"/>
+  <circle cx="372" cy="205" r="13" fill="#232f3e"/><text x="372" y="210" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">2</text>
+  <text x="395" y="192" font-size="13" fill="#232f3e">ID token (JWT)</text>
+  <!-- 3 exchange -->
+  <path d="M270,300 L420,290" stroke="#232f3e" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <circle cx="345" cy="288" r="13" fill="#232f3e"/><text x="345" y="293" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">3</text>
+  <text x="345" y="318" text-anchor="middle" font-size="12" fill="#232f3e">Exchange token</text>
+  <!-- 4 assume role -->
+  <path d="M545,340 L545,420" stroke="#232f3e" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <circle cx="545" cy="380" r="13" fill="#232f3e"/><text x="545" y="385" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">4</text>
+  <text x="566" y="372" font-size="12" fill="#232f3e">Assume</text><text x="566" y="388" font-size="12" fill="#232f3e">authenticated role</text>
+  <!-- 5 temp creds -->
+  <path d="M420,480 L330,480 Q155,480 155,380 L155,360" stroke="#232f3e" stroke-width="2" stroke-dasharray="6 4" fill="none" marker-end="url(#a)"/>
+  <circle cx="240" cy="480" r="13" fill="#232f3e"/><text x="240" y="485" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">5</text>
+  <text x="240" y="508" text-anchor="middle" font-size="12" fill="#232f3e">Temporary AWS credentials</text>
+  <!-- 6 S3 calls -->
+  <path d="M270,330 L330,330 L330,572 L1030,572 L1030,360" stroke="#d86613" stroke-width="3" fill="none" marker-end="url(#o)"/>
+  <circle cx="700" cy="572" r="13" fill="#d86613"/><text x="700" y="577" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">6</text>
+  <text x="725" y="563" font-size="13" fill="#d86613" font-weight="700">List / download / upload / delete – signed requests straight to S3</text>
+
+  <!-- legend -->
+  <text x="690" y="130" font-size="12" fill="#545b64">Optional: CloudFormation (cloudformation.yaml)</text>
+  <text x="690" y="147" font-size="12" fill="#545b64">creates the pools, role and policy above</text>
+  <line x1="680" y1="108" x2="680" y2="150" stroke="#545b64" stroke-width="2" stroke-dasharray="3 3"/>
+  <text x="760" y="440" font-size="12" fill="#545b64">Solid arrow = request</text>
+  <text x="760" y="458" font-size="12" fill="#545b64">Dashed arrow = response</text>
+  <text x="760" y="476" font-size="12" fill="#545b64">Orange = data path to the bucket</text>
+</svg>

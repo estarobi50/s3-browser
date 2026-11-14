@@ -7,6 +7,10 @@ Sign-in is handled by Amazon Cognito; no Amplify backend and no access keys
 in the browser.
 
 ## Architecture
+
+![AWS authentication and access flow](docs/architecture.png)
+
+The diagram source is `docs/architecture.svg` (vector, editable in any text editor or diagram tool).
 User opens the app (http://localhost:5173 in development)
   → Authenticator signs the user in against a Cognito user pool
   → Cognito identity pool exchanges the login for temporary IAM credentials
