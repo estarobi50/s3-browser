@@ -44,10 +44,11 @@ const { StorageBrowser } = createStorageBrowser({
   config: createAmplifyAuthAdapter(),
 });
 
-// Branding: drop your logo at public/logo.png (or edit LOGO_SRC / TITLE below).
-// If the file is missing, the logo is simply hidden.
+// Branding: logo is public/logo.png (transparent PNG, designed for a dark background).
+// Replace that file to change it; if it is missing the logo is simply hidden.
 const LOGO_SRC = '/logo.png';
 const TITLE = 'Digital Culture IT Solutions';
+const BRAND_BG = '#080f1e';
 
 function Logo({ height }: { height: number }) {
   return (
@@ -65,7 +66,16 @@ function Logo({ height }: { height: number }) {
 const authComponents = {
   Header() {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0 8px' }}>
+      <div
+        style={{
+          background: BRAND_BG,
+          borderRadius: 8,
+          padding: '20px 24px',
+          margin: '24px auto 16px',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
         <Logo height={72} />
       </div>
     );
@@ -82,13 +92,16 @@ export default function App() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: 12,
+              background: BRAND_BG,
+              color: '#fff',
+              borderRadius: 8,
+              padding: '12px 20px',
+              marginBottom: 16,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Logo height={40} />
-              <h2 style={{ margin: 0 }}>{TITLE}</h2>
-              <span style={{ opacity: 0.6 }}>{bucket}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <Logo height={44} />
+              <span style={{ opacity: 0.7 }}>File portal · {bucket}</span>
             </div>
             <button onClick={signOut}>Sign out</button>
           </div>
