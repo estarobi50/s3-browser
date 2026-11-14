@@ -26,6 +26,22 @@ User opens the app (http://localhost:5173 in development)
 
 ## Deployment Steps
 
+Steps 1-3 can be done by hand (below) or in one go with cloudformation.yaml:
+
+  CloudFormation option (replaces steps 1-3)
+       - CloudFormation > Create stack > With new resources (standard)
+       - Upload a template file > choose cloudformation.yaml
+       - Stack name: s3-browser
+       - BucketName: the existing bucket to browse
+       - AccessLevel: ReadWrite or ReadOnly
+       - AdminEmail: your email (Cognito sends a temporary password), or leave blank
+       - Tick "I acknowledge that AWS CloudFormation might create IAM resources"
+       - After CREATE_COMPLETE, open the Outputs tab: the Vite* values map
+         one-to-one to the entries in .env
+       - Bucket CORS (step 4) is still manual: the template does not touch the bucket
+
+  Manual option
+
   1. Create Cognito user pool
        - Cognito > User pools > Create user pool
        - Application type: Single-page application (SPA)
@@ -75,6 +91,8 @@ User opens the app (http://localhost:5173 in development)
   particular), multipart uploads fail even though listing works
 - The identity pool's default role starts with almost no permissions; S3
   access has to be added to it afterwards in IAM
+- CloudFormation cannot set CORS on a bucket it did not create without
+  importing the bucket or using a custom resource, so CORS stays a manual step
 - VITE_* values are compiled into the browser bundle. Pool and client IDs are
   not secrets, but access keys must never go there
 - A Cognito user pool on the Essentials or Lite tier is free up to 10,000

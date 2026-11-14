@@ -1,0 +1,172 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Auth stack for the s3-browser app: Cognito user pool (no self sign-up),
+  SPA app client, identity pool, and an IAM role scoped to one existing
+  S3 bucket. Bucket CORS is not managed here (see README).
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: S3 bucket
+        Parameters:
+          - BucketName
+          - AccessLevel
+      - Label:
+          default: Sign-in user
+        Parameters:
+          - AdminEmail
+    ParameterLabels:
+      BucketName:
+        default: Existing bucket to browse
+      AccessLevel:
+        default: Access level for signed-in users
+      AdminEmail:
+        default: Email for the first user (optional)
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: Name of the existing S3 bucket the app will browse. The stack does not create or modify the bucket.
+    AllowedPattern: '^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$'
+    ConstraintDescription: Must be a valid S3 bucket name.
+  AccessLevel:
+    Type: String
+    Description: ReadWrite allows upload and delete. ReadOnly allows list and download only.
+    Default: ReadWrite
+    AllowedValues:
+      - ReadWrite
+      - ReadOnly
+  AdminEmail:
+    Type: String
+    Description: If set, a user is created and Cognito emails a temporary password to this address. Leave blank to create users later in the console.
+    Default: ''
+
+Conditions:
+  CreateAdminUser: !Not [!Equals [!Ref AdminEmail, '']]
+  IsReadWrite: !Equals [!Ref AccessLevel, ReadWrite]
+
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub '${AWS::StackName}-user-pool'
+      UserPoolTier: ESSENTIALS
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 12
+          RequireLowercase: true
+          RequireUppercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          TemporaryPasswordValidityDays: 7
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: s3-browser
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      PreventUserExistenceErrors: ENABLED
+      EnableTokenRevocation: true
+
+  AdminUser:
+    Type: AWS::Cognito::UserPoolUser
+    Condition: CreateAdminUser
+    Properties:
+      UserPoolId: !Ref UserPool
+      Username: !Ref AdminEmail
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Ref AdminEmail
+        - Name: email_verified
+          Value: 'true'
+
+  IdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      IdentityPoolName: !Sub '${AWS::StackName}-identity-pool'
+      AllowUnauthenticatedIdentities: false
+      AllowClassicFlow: false
+      CognitoIdentityProviders:
+        - ClientId: !Ref UserPoolClient
+          ProviderName: !GetAtt UserPool.ProviderName
+          ServerSideTokenCheck: true
+
+  AuthenticatedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Assumed by signed-in s3-browser users through the Cognito identity pool
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                cognito-identity.amazonaws.com:aud: !Ref IdentityPool
+              ForAnyValue:StringLike:
+                cognito-identity.amazonaws.com:amr: authenticated
+      Policies:
+        - PolicyName: s3-browser-bucket-access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: ListBucket
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource: !Sub 'arn:${AWS::Partition}:s3:::${BucketName}'
+              - Sid: ObjectAccess
+                Effect: Allow
+                Action: !If
+                  - IsReadWrite
+                  - - s3:GetObject
+                    - s3:PutObject
+                    - s3:DeleteObject
+                  - - s3:GetObject
+                Resource: !Sub 'arn:${AWS::Partition}:s3:::${BucketName}/*'
+
+  IdentityPoolRoles:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref IdentityPool
+      Roles:
+        authenticated: !GetAtt AuthenticatedRole.Arn
+
+Outputs:
+  ViteAwsRegion:
+    Description: Value for VITE_AWS_REGION in .env
+    Value: !Ref AWS::Region
+  ViteUserPoolId:
+    Description: Value for VITE_USER_POOL_ID in .env
+    Value: !Ref UserPool
+  ViteUserPoolClientId:
+    Description: Value for VITE_USER_POOL_CLIENT_ID in .env
+    Value: !Ref UserPoolClient
+  ViteIdentityPoolId:
+    Description: Value for VITE_IDENTITY_POOL_ID in .env
+    Value: !Ref IdentityPool
+  ViteS3Bucket:
+    Description: Value for VITE_S3_BUCKET in .env
+    Value: !Ref BucketName
+  AuthenticatedRoleArn:
+    Description: IAM role assumed by signed-in users
+    Value: !GetAtt AuthenticatedRole.Arn
