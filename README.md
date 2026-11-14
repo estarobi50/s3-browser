@@ -79,6 +79,42 @@ Steps 1-3 can be done by hand (below) or in one go with cloudformation.yaml:
        - npm run build
        - Upload the dist/ folder to any static host (S3 + CloudFront, Amplify Hosting)
 
+## Using the Portal
+
+  First-time setup on your PC
+       - Install Node.js LTS from nodejs.org
+       - In File Explorer, open the s3-browser folder
+       - Click the address bar, type cmd, press Enter (a terminal opens in that folder)
+       - Run: npm install
+
+  Each time you want to use it
+       - In the s3-browser folder's terminal, run: npm run dev
+       - Leave that terminal window open while you work
+       - Open http://localhost:5173 in your browser
+
+  Signing in
+       - Sign in with the email of your Cognito user
+       - First sign-in only: use the temporary password Cognito emailed you
+         (sender no-reply@verificationemail.com, check spam), then set your own
+       - The temporary password expires after 7 days; if it lapses, open the user
+         in Cognito > User pools > Users and choose delete the user
+         and create it again to get a new one
+
+  Browsing the bucket
+       - On the Home screen, click the bucket location
+       - Click folders to move down; use the breadcrumb to move back up
+       - Use the actions menu (three dots) to Upload, Download, Copy,
+         Create folder or Delete
+       - Sign out with the button at the top right
+
+  Good to know
+       - Changes are live in S3 immediately. If the bucket also serves a website
+         through CloudFront, a deleted or replaced file changes the site once the
+         cache clears
+       - If listing works but uploads fail, re-check the bucket CORS config (step 4)
+       - "Access Denied" after sign-in means the IAM role policy does not cover
+         the bucket or prefix you opened
+
 ## Key Learnings
 - createAmplifyAuthAdapter takes no arguments; the locations shown in the
   browser come from the Storage.S3.buckets[...].paths block passed to
