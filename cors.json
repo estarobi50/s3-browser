@@ -1,0 +1,18 @@
+[
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["GET", "HEAD", "PUT", "POST", "DELETE"],
+    "AllowedOrigins": ["http://localhost:5173"],
+    "ExposeHeaders": [
+      "ETag",
+      "last-modified",
+      "content-type",
+      "content-length",
+      "x-amz-server-side-encryption",
+      "x-amz-request-id",
+      "x-amz-id-2",
+      "x-amz-version-id"
+    ],
+    "MaxAgeSeconds": 3000
+  }
+]
