@@ -96,9 +96,8 @@ Steps 1-3 can be done by hand (below) or in one go with cloudformation.yaml:
        - Sign in with the email of your Cognito user
        - First sign-in only: use the temporary password Cognito emailed you
          (sender no-reply@verificationemail.com, check spam), then set your own
-       - The temporary password expires after 7 days; if it lapses, open the user
-         in Cognito > User pools > Users and choose delete the user
-         and create it again to get a new one
+       - The temporary password expires after 7 days; if it lapses, go to
+         Cognito > User pools > Users, delete the user and create it again
 
   Browsing the bucket
        - On the Home screen, click the bucket location
