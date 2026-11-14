@@ -120,10 +120,10 @@ The portal shows a logo on the sign-in screen, at the top of the file browser, a
 
 1. Open the `s3-browser` folder in File Explorer.
 2. Open the `public` folder inside it (create a folder named `public` if it does not exist).
-3. Copy your logo into it and name it exactly `logo.png`. Use a transparent PNG designed for a dark background (the portal shows it on a dark navy band). Optionally add a square `favicon.png` for the browser-tab icon.
+3. Copy your logo into it and name it exactly `logo.svg` (a vector logo stays sharp at any size; a transparent PNG also works if you change `LOGO_SRC` in `src/App.tsx` to `/logo.png`). Design it for a dark background, because the portal shows it on a dark navy band. Optionally add a square `favicon.png` for the browser-tab icon.
 4. Refresh the portal page in your browser. If the page is not running, start it as described in **Using the Portal**.
 
-The band color and the alt text are set near the top of the branding block in `src/App.tsx`. If no `logo.png` is present, the logo is hidden and the portal still works.
+The band color and the alt text are set near the top of the branding block in `src/App.tsx`. If no logo file is present, the logo is hidden and the portal still works.
 
 ## Key Learnings
 - createAmplifyAuthAdapter takes no arguments; the locations shown in the

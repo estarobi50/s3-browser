@@ -44,9 +44,9 @@ const { StorageBrowser } = createStorageBrowser({
   config: createAmplifyAuthAdapter(),
 });
 
-// Branding: logo is public/logo.png (transparent PNG, designed for a dark background).
-// Replace that file to change it; if it is missing the logo is simply hidden.
-const LOGO_SRC = '/logo.png';
+// Branding: logo is public/logo.svg (vector, designed for a dark background).
+// Replace that file (or point LOGO_SRC at a .png) to change it; if it is missing the logo is simply hidden.
+const LOGO_SRC = '/logo.svg';
 const TITLE = 'Digital Culture IT Solutions';
 const BRAND_BG = '#080f1e';
 
