@@ -114,6 +114,17 @@ Steps 1-3 can be done by hand (below) or in one go with cloudformation.yaml:
        - "Access Denied" after sign-in means the IAM role policy does not cover
          the bucket or prefix you opened
 
+## Adding Your Logo
+
+The portal shows a logo on the sign-in screen, at the top of the file browser, and as the browser-tab icon.
+
+1. Open the `s3-browser` folder in File Explorer.
+2. Open the `public` folder inside it (create a folder named `public` if it does not exist).
+3. Copy your logo into it and name it exactly `logo.png` (a transparent PNG about 400 px wide works best).
+4. Refresh the portal page in your browser. If the page is not running, start it as described in **Using the Portal**.
+
+To change the title text next to the logo, edit the `TITLE` line near the bottom of `src/App.tsx`. If no `logo.png` is present, the logo is hidden and the portal still works.
+
 ## Key Learnings
 - createAmplifyAuthAdapter takes no arguments; the locations shown in the
   browser come from the Storage.S3.buckets[...].paths block passed to

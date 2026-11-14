@@ -44,9 +44,37 @@ const { StorageBrowser } = createStorageBrowser({
   config: createAmplifyAuthAdapter(),
 });
 
+// Branding: drop your logo at public/logo.png (or edit LOGO_SRC / TITLE below).
+// If the file is missing, the logo is simply hidden.
+const LOGO_SRC = '/logo.png';
+const TITLE = 'Digital Culture IT Solutions';
+
+function Logo({ height }: { height: number }) {
+  return (
+    <img
+      src={LOGO_SRC}
+      alt={TITLE}
+      style={{ height, display: 'block' }}
+      onError={(e) => {
+        e.currentTarget.style.display = 'none';
+      }}
+    />
+  );
+}
+
+const authComponents = {
+  Header() {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0 8px' }}>
+        <Logo height={72} />
+      </div>
+    );
+  },
+};
+
 export default function App() {
   return (
-    <Authenticator hideSignUp>
+    <Authenticator hideSignUp components={authComponents}>
       {({ signOut }) => (
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: 16 }}>
           <div
@@ -54,9 +82,14 @@ export default function App() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              marginBottom: 12,
             }}
           >
-            <h2>{bucket}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Logo height={40} />
+              <h2 style={{ margin: 0 }}>{TITLE}</h2>
+              <span style={{ opacity: 0.6 }}>{bucket}</span>
+            </div>
             <button onClick={signOut}>Sign out</button>
           </div>
           <StorageBrowser />
